@@ -13,15 +13,15 @@ export function Portfolio() {
   const projects: Project[] = [
     {
       title: "Fili Coffee",
-      category: "TikTok Series",
-      video: vid1,  
-      views: "10M+"
+      category: "Promotion",
+      video: vid1,
+      views: "500K+"
     },
     {
       title: "Fili Coffee",
-      category: "TikTok Series",
-      video: vid2,  
-      views: "10M+"
+      category: "Promotion",
+      video: vid2,
+       views: "500K+"
     },
   ];
 
@@ -59,18 +59,26 @@ function VideoCard({ project }: { project: Project }) {
     }
   };
 
+  // Handle mute/unmute toggle
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;  // Toggle mute state
+    }
+  };
+
   return (
     <div className="group relative overflow-hidden rounded-2xl">
       {/* Video element */}
       <video
         ref={videoRef}  // Attach the ref to the video element
-        src={project.video}
-        alt={project.title}
+        src={project.video}  // Video source
         className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-110"
-        muted
         loop
         controls
+        title={project.title}  // Optional: for accessibility
+        aria-label={project.title}  // Optional: for screen readers
       />
+
 
       {/* Overlay for video info */}
       <div className="absolute inset-0 bg-gradient-to-t from-violet-950/90 via-zinc-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
@@ -90,6 +98,14 @@ function VideoCard({ project }: { project: Project }) {
       >
         {PlayIcon()}
       </div>
+
+      {/* Mute/Unmute Button */}
+      <button
+        className="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full"
+        onClick={toggleMute}  // Handle click to mute/unmute video
+      >
+        Toggle Mute
+      </button>
     </div>
   );
 }
