@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import vid1 from '../assets/video/vid1.mp4'; // Import your local videos
+import React, { useRef, useState } from 'react';
+import vid1 from '../assets/video/vid1.mp4';
 import vid2 from '../assets/video/vid2.mp4';
 
 interface Project {
@@ -47,14 +47,17 @@ export function Portfolio() {
 
 function VideoCard({ project }: { project: Project }) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   // Handle play button click
   const handlePlay = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        videoRef.current.play();  // Play the video if it's paused
+        videoRef.current.play();
+        setIsPlaying(true);
       } else {
-        videoRef.current.pause();  // Pause the video if it's playing
+        videoRef.current.pause();
+        setIsPlaying(false); 
       }
     }
   };
@@ -62,7 +65,7 @@ function VideoCard({ project }: { project: Project }) {
   // Handle mute/unmute toggle
   const toggleMute = () => {
     if (videoRef.current) {
-      videoRef.current.muted = !videoRef.current.muted;  // Toggle mute state
+      videoRef.current.muted = !videoRef.current.muted; 
     }
   };
 
@@ -70,15 +73,13 @@ function VideoCard({ project }: { project: Project }) {
     <div className="group relative overflow-hidden rounded-2xl">
       {/* Video element */}
       <video
-        ref={videoRef}  // Attach the ref to the video element
-        src={project.video}  // Video source
+        ref={videoRef}
+        src={project.video}
         className="w-full aspect-video object-cover transition-transform duration-500 group-hover:scale-110"
         loop
         controls
-        title={project.title}  // Optional: for accessibility
-        aria-label={project.title}  // Optional: for screen readers
+        onClick={handlePlay} 
       />
-
 
       {/* Overlay for video info */}
       <div className="absolute inset-0 bg-gradient-to-t from-violet-950/90 via-zinc-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300">
@@ -93,8 +94,10 @@ function VideoCard({ project }: { project: Project }) {
 
       {/* Custom Play button SVG overlay */}
       <div
-        className="absolute inset-0 flex justify-center items-center opacity-0 group-hover:opacity-100 transition-all duration-300 cursor-pointer"
-        onClick={handlePlay}  // Handle click to play/pause video
+        className={`absolute inset-0 flex justify-center items-center transition-opacity duration-300 cursor-pointer ${
+          isPlaying ? 'opacity-0' : 'opacity-100 group-hover:opacity-100'
+        }`}
+        onClick={handlePlay}  
       >
         {PlayIcon()}
       </div>
@@ -102,7 +105,7 @@ function VideoCard({ project }: { project: Project }) {
       {/* Mute/Unmute Button */}
       <button
         className="absolute top-2 right-2 p-2 bg-black/50 text-white rounded-full"
-        onClick={toggleMute}  // Handle click to mute/unmute video
+        onClick={toggleMute}  
       >
         Toggle Mute
       </button>
@@ -110,7 +113,6 @@ function VideoCard({ project }: { project: Project }) {
   );
 }
 
-// Custom SVG for the Play button
 const PlayIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 text-white opacity-90" fill="currentColor" viewBox="0 0 24 24">
     <path d="M3 22V2l18 10L3 22z" />
